@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Folder Include="Abstracts" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Muflone" Version="6.1.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+        <PackageReference Include="Muflone.Transport.Azure" Version="6.1.1" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\BrewUpProduction.Modules.Produzione.Shared\BrewUpProduction.Modules.Produzione.Shared.csproj" />
+      <ProjectReference Include="..\BrewUpProduction.Modules.Produzione\BrewUpProduction.Modules.Produzione.csproj" />
+    </ItemGroup>
+
+</Project>
