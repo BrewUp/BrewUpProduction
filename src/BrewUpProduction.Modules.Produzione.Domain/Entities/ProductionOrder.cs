@@ -5,7 +5,8 @@ namespace BrewUpProduction.Modules.Produzione.Domain.Entities;
 
 public class ProductionOrder : Entity
 {
-    private BatchNumber _batchNumber = new (string.Empty);
+    internal BatchNumber BatchNumber { get; } = new(string.Empty);
+
     private Quantity _quantityToBeProduced = new(0);
     private Quantity _quantityProduced = new(0);
 
@@ -21,15 +22,13 @@ public class ProductionOrder : Entity
     private ProductionOrder(BatchId batchId, BatchNumber batchNumber, Quantity quantity,
         ProductionStartTime productionStartTime) : base(batchId)
     {
-        _batchNumber = batchNumber;
+        BatchNumber = batchNumber;
 
         _quantityToBeProduced = quantity;
         _productionStartTime = productionStartTime;
 
         _productionCompleteTime = new ProductionCompleteTime(DateTime.MinValue);
     }
-
-    internal BatchNumber batchNumber => _batchNumber;
 
     internal void CompleteProduction(Quantity quantity, ProductionCompleteTime productionCompleteTime)
     {

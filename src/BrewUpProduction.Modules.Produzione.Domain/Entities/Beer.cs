@@ -63,11 +63,29 @@ public class Beer : AggregateRoot
     }
     #endregion
 
-    #region MyRegion
-    internal void StartNewProductionOrder(BeerId beerId, BatchId batchId, BatchNumber batchNumber, Quantity quantity,
+    #region AddProductionOrder
+    internal void AddProductionOrder(BeerId beerId, BatchId batchId, BatchNumber batchNumber, Quantity quantity,
         ProductionStartTime productionStartTime)
     {
+        var productionOrder = _productionOrders.FirstOrDefault(p => p.BatchNumber.Equals(batchNumber));
+        if (productionOrder != null)
+        {
+            RaiseEvent(new ProductionExceptionHappened(beerId, $"Ordine {batchNumber.Value} già presente!"));
+            return;
+        }
 
+        RaiseEvent(new BeerProductionAdded(beerId, _beerType, batchId, batchNumber, quantity, productionStartTime));
+    }
+
+    private void Apply(BeerProductionAdded @event)
+    {
+        var productionOrder =
+            ProductionOrder.StartProduction(@event.BatchId, @event.BatchNumber, @event.Quantity,
+                @event.ProductionStartTime);
+        _productionOrders = _productionOrders.Concat(new List<ProductionOrder>
+        {
+            productionOrder
+        });
     }
     #endregion
 
@@ -84,11 +102,11 @@ public class Beer : AggregateRoot
         _beerId = @event.BeerId;
         _quantityAvailable = new Quantity(_quantityAvailable.Value + @event.Quantity.Value);
 
-        var productionOrder = _productionOrders.FirstOrDefault(p => p.batchNumber.Equals(@event.BatchNumber));
+        var productionOrder = _productionOrders.FirstOrDefault(p => p.BatchNumber.Equals(@event.BatchNumber));
         if (productionOrder == null) return;
 
         productionOrder.CompleteProduction(@event.Quantity, @event.ProductionCompleteTime);
-        _productionOrders = _productionOrders.Where(p => !p.batchNumber.Equals(@event.BatchNumber))
+        _productionOrders = _productionOrders.Where(p => !p.BatchNumber.Equals(@event.BatchNumber))
             .Concat(new List<ProductionOrder>
             {
                 productionOrder

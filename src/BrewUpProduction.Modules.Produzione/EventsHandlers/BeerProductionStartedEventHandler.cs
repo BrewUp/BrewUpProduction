@@ -7,7 +7,7 @@ namespace BrewUpProduction.Modules.Produzione.EventsHandlers;
 public sealed class BeerProductionStartedEventHandler : ProductionDomainEventHandler<BeerProductionStarted>
 {
     private readonly IBeerService _beerService;
-    private IProductionBroadcastService _productionBroadcastService;
+    private readonly IProductionBroadcastService _productionBroadcastService;
 
     public BeerProductionStartedEventHandler(ILoggerFactory loggerFactory,
         IBeerService beerService,
@@ -19,6 +19,9 @@ public sealed class BeerProductionStartedEventHandler : ProductionDomainEventHan
 
     public override async Task HandleAsync(BeerProductionStarted @event, CancellationToken cancellationToken = new())
     {
+        if (cancellationToken.IsCancellationRequested)
+            cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
             await _beerService.CreateBeerAsync(@event.BeerId, @event.BeerType, @event.BatchId,

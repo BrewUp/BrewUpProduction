@@ -6,17 +6,17 @@ using Muflone.Persistence;
 using Muflone.Transport.Azure.Consumers;
 using Muflone.Transport.Azure.Models;
 
-namespace BrewUpProduction.Modules.Produzione.Domain.Consumers.Commands;
+namespace BrewUpProduction.Modules.Produzione.Domain.Consumers;
 
-public sealed class CompleteBeerProductionConsumer : CommandConsumerBase<CompleteBeerProduction>
+public sealed class AddBeerProductionConsumer : CommandConsumerBase<AddBeerProduction>
 {
-    protected override ICommandHandlerAsync<CompleteBeerProduction> HandlerAsync { get; }
+    protected override ICommandHandlerAsync<AddBeerProduction> HandlerAsync { get; }
 
-    public CompleteBeerProductionConsumer(IRepository repository,
+    public AddBeerProductionConsumer(IRepository repository,
         AzureServiceBusConfiguration azureServiceBusConfiguration,
         ILoggerFactory loggerFactory,
         ISerializer? messageSerializer = null) : base(azureServiceBusConfiguration, loggerFactory, messageSerializer)
     {
-        HandlerAsync = new CompleteBeerProductionCommandHandler(repository, loggerFactory);
+        HandlerAsync = new AddBeerProductionCommandHandler(repository, loggerFactory);
     }
 }

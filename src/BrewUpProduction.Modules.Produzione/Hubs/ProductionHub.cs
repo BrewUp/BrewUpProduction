@@ -23,7 +23,7 @@ public class ProductionHub : Hub
 
     public override async Task OnConnectedAsync()
     {
-        _logger.LogInformation($"Clients connected: {_context.Clients.ToString()}");
+        _logger.LogInformation($"Clients connected: {_context.Clients}");
         await _context.Clients.All.SendAsync("beerProductionStarted", "Welcome");
 
         await base.OnConnectedAsync();

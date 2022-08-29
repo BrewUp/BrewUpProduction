@@ -19,6 +19,7 @@ public class CompleteBeerProductionTest : CommandSpecification<CompleteBeerProdu
     private readonly Quantity _quantity = new(200);
     private readonly ProductionStartTime _productionStartTime = new(DateTime.UtcNow);
     private readonly ProductionCompleteTime _productionCompleteTime = new(DateTime.UtcNow.AddDays(1));
+
     protected override IEnumerable<DomainEvent> Given()
     {
         yield return new BeerProductionStarted(_beerId, _beerType, _batchId, _batchNumber, _quantity, _productionStartTime);

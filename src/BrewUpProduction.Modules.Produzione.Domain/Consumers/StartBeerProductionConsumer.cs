@@ -6,7 +6,7 @@ using Muflone.Persistence;
 using Muflone.Transport.Azure.Consumers;
 using Muflone.Transport.Azure.Models;
 
-namespace BrewUpProduction.Modules.Produzione.Domain.Consumers.Commands;
+namespace BrewUpProduction.Modules.Produzione.Domain.Consumers;
 
 public sealed class StartBeerProductionConsumer : CommandConsumerBase<StartBeerProduction>
 {

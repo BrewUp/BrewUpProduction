@@ -6,13 +6,13 @@ using Muflone.Persistence;
 
 namespace BrewUpProduction.Modules.Produzione.Domain.CommandHandlers;
 
-public sealed class BottlingBeerCommandHandler : CommandHandlerAsync<BottlingBeer>
+public sealed class AddBeerProductionCommandHandler : CommandHandlerAsync<AddBeerProduction>
 {
-    public BottlingBeerCommandHandler(IRepository repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
+    public AddBeerProductionCommandHandler(IRepository repository, ILoggerFactory loggerFactory) : base(repository, loggerFactory)
     {
     }
 
-    public override async Task HandleAsync(BottlingBeer command, CancellationToken cancellationToken = new())
+    public override async Task HandleAsync(AddBeerProduction command, CancellationToken cancellationToken = new ())
     {
         if (cancellationToken.IsCancellationRequested)
             cancellationToken.ThrowIfCancellationRequested();
@@ -20,7 +20,8 @@ public sealed class BottlingBeerCommandHandler : CommandHandlerAsync<BottlingBee
         try
         {
             var beer = await Repository.GetByIdAsync<Beer>(command.BeerId.Value);
-            beer.BottlingBeer(command.BeerId, command.BottleHalfLitre);
+            beer.AddProductionOrder(command.BeerId, command.BatchId, command.BatchNumber, command.Quantity,
+                command.ProductionStartTime);
 
             await Repository.SaveAsync(beer, Guid.NewGuid());
         }

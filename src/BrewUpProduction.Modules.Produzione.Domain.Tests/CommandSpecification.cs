@@ -60,8 +60,9 @@ namespace BrewUpProduction.Modules.Produzione.Domain.Tests
 			var config = new ComparisonConfig();
 			config.MembersToIgnore.Add("Headers");
 			config.MembersToIgnore.Add("MessageId");
+            config.MembersToIgnore.Add("UserProperties");
 
-			var compareObjects = new CompareLogic(config);
+            var compareObjects = new CompareLogic(config);
 			var eventPairs = expected.Zip(published, (e, p) => new {Expected = e, Published = p});
 			foreach (var eventPair in eventPairs)
 			{

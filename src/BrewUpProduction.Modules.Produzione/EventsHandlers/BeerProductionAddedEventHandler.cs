@@ -1,17 +1,15 @@
 ﻿using BrewUpProduction.Modules.Produzione.Abstracts;
-using BrewUpProduction.Modules.Produzione.Shared.CustomTypes;
 using BrewUpProduction.Modules.Produzione.Shared.Events;
-using BrewUpProduction.Shared.Concretes;
 using Microsoft.Extensions.Logging;
 
 namespace BrewUpProduction.Modules.Produzione.EventsHandlers;
 
-public sealed class BeerProductionCompletedForProductionOrderEventHandler : ProductionDomainEventHandler<BeerProductionCompleted>
+public sealed class BeerProductionAddedEventHandler : ProductionDomainEventHandler<BeerProductionAdded>
 {
     private readonly IProductionService _productionService;
     private readonly IProductionBroadcastService _productionBroadcastService;
 
-    public BeerProductionCompletedForProductionOrderEventHandler(ILoggerFactory loggerFactory,
+    public BeerProductionAddedEventHandler(ILoggerFactory loggerFactory,
         IProductionService productionService,
         IProductionBroadcastService productionBroadcastService) : base(loggerFactory)
     {
@@ -19,21 +17,21 @@ public sealed class BeerProductionCompletedForProductionOrderEventHandler : Prod
         _productionBroadcastService = productionBroadcastService;
     }
 
-    public override async Task HandleAsync(BeerProductionCompleted @event, CancellationToken cancellationToken = new())
+    public override async Task HandleAsync(BeerProductionAdded @event, CancellationToken cancellationToken = new ())
     {
         if (cancellationToken.IsCancellationRequested)
             cancellationToken.ThrowIfCancellationRequested();
 
         try
         {
-            await _productionService.CompleteProductionOrderAsync(@event.BatchNumber, @event.Quantity,
-                @event.ProductionCompleteTime);
+            await _productionService.CreateProductionOrderAsync(@event.BatchId, @event.BatchNumber, @event.BeerId,
+                @event.BeerType, @event.Quantity, @event.ProductionStartTime);
 
-            await _productionBroadcastService.PublishProductionOrderUpdatedAsync(new BatchId(@event.AggregateId.Value));
+            await _productionBroadcastService.PublishProductionOrderUpdatedAsync(@event.BatchId);
         }
         catch (Exception ex)
         {
-            Logger.LogError(CommonServices.GetDefaultErrorTrace(ex));
+            Logger.LogError(ex, $"An error occurred processing event {@event.MessageId}. Message: {ex.Message}");
             throw;
         }
     }

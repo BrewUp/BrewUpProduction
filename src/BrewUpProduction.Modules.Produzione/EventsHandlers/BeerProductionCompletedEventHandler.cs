@@ -17,6 +17,9 @@ public sealed class BeerProductionCompletedEventHandler : ProductionDomainEventH
 
     public override async Task HandleAsync(BeerProductionCompleted @event, CancellationToken cancellationToken = new())
     {
+        if (cancellationToken.IsCancellationRequested)
+            cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
             await _beerService.UpdateBeerQuantityAsync(@event.BeerId, @event.Quantity);

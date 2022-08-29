@@ -11,24 +11,28 @@ namespace BrewUpProduction.Modules.Produzione.Domain.Tests.Entities;
 public class BottlingBeerCommandTest : CommandSpecification<BottlingBeer>
 {
     private readonly BeerId _beerId = new(Guid.NewGuid());
-    
+    private readonly BeerType _beerType = new("IPA");
+
+    private readonly BatchId _batchId = new(Guid.NewGuid());
     private readonly BatchNumber _batchNumber = new("1234");
     
     private readonly BottleHalfLitre _bottleHalfLitre = new(50);
+
+    private readonly Quantity _quantity = new(200);
     private readonly Quantity _residualQuantity = new(5);
     private readonly Quantity _finalQuantity = new(30);
     private readonly BeerLabel _beerLabel = new("Label");
 
+    private readonly ProductionStartTime _productionStartTime = new(DateTime.UtcNow);
+    private readonly ProductionCompleteTime _productionCompleteTime = new(DateTime.UtcNow);
+
     protected override IEnumerable<DomainEvent> Given()
     {
-        yield return new BeerProductionCompleted(_beerId, _batchNumber, _finalQuantity,
-            new ProductionCompleteTime(DateTime.UtcNow));
+        yield return new BeerProductionStarted(_beerId, _beerType, _batchId, _batchNumber, _quantity, _productionStartTime);
+        yield return new BeerProductionCompleted(_beerId, _batchNumber, _finalQuantity, _productionCompleteTime);
     }
 
-    protected override BottlingBeer When()
-    {
-        return new BottlingBeer(_beerId, _bottleHalfLitre);
-    }
+    protected override BottlingBeer When() => new (_beerId, _bottleHalfLitre);
 
     protected override ICommandHandlerAsync<BottlingBeer> OnHandler() =>
         new BottlingBeerCommandHandler(Repository, new NullLoggerFactory());

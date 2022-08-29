@@ -10,8 +10,8 @@ public sealed class BeerProductionStartedForProductionOrderEventHandler : Produc
     private readonly IProductionBroadcastService _productionBroadcastService;
 
     public BeerProductionStartedForProductionOrderEventHandler(ILoggerFactory loggerFactory,
-        IProductionBroadcastService productionBroadcastService,
-        IProductionService productionService) : base(loggerFactory)
+        IProductionService productionService,
+        IProductionBroadcastService productionBroadcastService) : base(loggerFactory)
     {
         _productionService = productionService;
         _productionBroadcastService = productionBroadcastService;
@@ -19,6 +19,9 @@ public sealed class BeerProductionStartedForProductionOrderEventHandler : Produc
 
     public override async Task HandleAsync(BeerProductionStarted @event, CancellationToken cancellationToken = new())
     {
+        if (cancellationToken.IsCancellationRequested)
+            cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
             await _productionService.CreateProductionOrderAsync(@event.BatchId, @event.BatchNumber, @event.BeerId,

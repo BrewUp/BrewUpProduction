@@ -1,6 +1,6 @@
 ﻿using BrewUpProduction.Modules.Produzione;
 using BrewUpProduction.Modules.Produzione.Consumers.DomainEvents;
-using BrewUpProduction.Modules.Produzione.Domain.Consumers.Commands;
+using BrewUpProduction.Modules.Produzione.Domain.Consumers;
 using BrewUpProduction.Modules.Produzione.Shared.Commands;
 using BrewUpProduction.Modules.Produzione.Shared.Events;
 using BrewUpProduction.ReadModel.MongoDb;
@@ -33,13 +33,19 @@ public class InfrastructureModule : IModule
 
         var clientId = builder.Configuration["BrewUp:ClientId"];
         var serviceBusConnectionString = builder.Configuration["BrewUp:ServiceBusSettings:ConnectionString"];
+        var azureBusConfiguration =
+            new AzureServiceBusConfiguration(serviceBusConnectionString, nameof(StartBeerProduction), clientId);
+
         var consumers = new List<IConsumer>
         {
-            new StartBeerProductionConsumer(repository!, new AzureServiceBusConfiguration(serviceBusConnectionString, nameof(StartBeerProduction), clientId), loggerFactory!),
-            new BeerProductionStartedConsumer(domainEventHandlerFactoryAsync!, new AzureServiceBusConfiguration(serviceBusConnectionString, nameof(BeerProductionStarted), clientId), loggerFactory!),
+            new StartBeerProductionConsumer(repository!,azureBusConfiguration with { TopicName = nameof(StartBeerProduction) }, loggerFactory!),
+            new BeerProductionStartedConsumer(domainEventHandlerFactoryAsync!, azureBusConfiguration with { TopicName = nameof(BeerProductionStarted) }, loggerFactory!),
 
-            new CompleteBeerProductionConsumer(repository!, new AzureServiceBusConfiguration(serviceBusConnectionString, nameof(CompleteBeerProduction), clientId), loggerFactory!),
-            new BeerProductionCompletedConsumer(domainEventHandlerFactoryAsync!, new AzureServiceBusConfiguration(serviceBusConnectionString, nameof(BeerProductionCompleted), clientId), loggerFactory!)
+            new CompleteBeerProductionConsumer(repository!, azureBusConfiguration with { TopicName = nameof(CompleteBeerProduction) }, loggerFactory!),
+            new BeerProductionCompletedConsumer(domainEventHandlerFactoryAsync!, azureBusConfiguration with { TopicName = nameof(BeerProductionCompleted) }, loggerFactory!),
+
+            new AddBeerProductionConsumer(repository!, azureBusConfiguration with { TopicName = nameof(AddBeerProduction) }, loggerFactory!),
+            new BeerProductionAddedConsumer(domainEventHandlerFactoryAsync!, azureBusConfiguration with { TopicName = nameof(BeerProductionAdded) }, loggerFactory!)
         };
         builder.Services.AddMufloneTransportAzure(
             new AzureServiceBusConfiguration(builder.Configuration["BrewUp:ServiceBusSettings:ConnectionString"], "",

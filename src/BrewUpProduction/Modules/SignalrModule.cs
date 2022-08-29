@@ -10,7 +10,10 @@ public class SignalrModule : IModule
 
     public IServiceCollection RegisterModule(WebApplicationBuilder builder)
     {
-        builder.Services.AddSignalR(options => options.EnableDetailedErrors = true);
+        builder.Services.AddSignalR(o => o.EnableDetailedErrors = true)
+            .AddJsonProtocol(options => {
+                options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+            });
 
         return builder.Services;
     }
