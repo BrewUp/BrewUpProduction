@@ -58,7 +58,7 @@ public sealed class ProductionOrchestrator : IProductionOrchestrator
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            _logger.LogError(CommonServices.GetDefaultErrorTrace(ex));
             throw;
         }
     }

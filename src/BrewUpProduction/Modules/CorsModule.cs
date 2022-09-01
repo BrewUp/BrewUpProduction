@@ -1,4 +1,6 @@
-﻿namespace BrewUpProduction.Modules
+﻿using Microsoft.AspNetCore.ResponseCompression;
+
+namespace BrewUpProduction.Modules
 {
     public sealed class CorsModule : IModule
     {
@@ -10,9 +12,15 @@
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", corsBuilder =>
-                    corsBuilder.AllowAnyMethod()
-                        .AllowAnyOrigin()
-                        .AllowAnyHeader());
+                    corsBuilder.WithOrigins("https://localhost:7283/")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+
+                //options.AddPolicy("CorsPolicy", corsBuilder =>
+                //    corsBuilder.AllowAnyOrigin()
+                //        .AllowAnyMethod()
+                //        .AllowAnyHeader());
             });
 
             return builder.Services;
