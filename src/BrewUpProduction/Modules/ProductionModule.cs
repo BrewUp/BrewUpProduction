@@ -1,4 +1,3 @@
-using BrewUpProduction.Modules.Produzione;
 using BrewUpProduction.Modules.Produzione.Endpoints;
 using BrewUpProduction.Modules.Produzione.Shared;
 

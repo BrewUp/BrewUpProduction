@@ -3,6 +3,7 @@ using BrewUpProduction.Modules.Produzione.Shared.CustomTypes;
 using BrewUpProduction.Modules.Produzione.Shared.Dtos;
 using BrewUpProduction.Shared.Concretes;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 
 namespace BrewUpProduction.Modules.Produzione.Endpoints;

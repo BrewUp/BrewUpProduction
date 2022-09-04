@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
+using Muflone.Transport.Azure;
 
 namespace BrewUpProduction.Modules
 {
@@ -10,31 +13,34 @@ namespace BrewUpProduction.Modules
 
         public IServiceCollection RegisterModule(WebApplicationBuilder builder)
         {
-            builder.Services.AddAuthentication(sharedOptions =>
-            {
-                sharedOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                sharedOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(jwtBearerOptions =>
-            {
-                jwtBearerOptions.Authority = builder.Configuration["BrewUp:TokenAuthentication:Issuer"];
-                jwtBearerOptions.Audience = builder.Configuration["BrewUp:TokenAuthentication:Audience"];
-                jwtBearerOptions.Events = new JwtBearerEvents
-                {
-                    OnAuthenticationFailed = authenticationContext =>
-                    {
-                        if (authenticationContext.Exception.GetType() == typeof(SecurityTokenExpiredException))
-                            authenticationContext.Response.Headers.Add("Is-Token-Expired", "true");
+            //builder.Services.AddAuthentication(sharedOptions =>
+            //{
+            //    sharedOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    sharedOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //}).AddJwtBearer(jwtBearerOptions =>
+            //{
+            //    jwtBearerOptions.Authority = builder.Configuration["BrewUp:TokenAuthentication:Issuer"];
+            //    jwtBearerOptions.Audience = builder.Configuration["BrewUp:TokenAuthentication:Audience"];
+            //    jwtBearerOptions.Events = new JwtBearerEvents
+            //    {
+            //        OnAuthenticationFailed = authenticationContext =>
+            //        {
+            //            if (authenticationContext.Exception.GetType() == typeof(SecurityTokenExpiredException))
+            //                authenticationContext.Response.Headers.Add("Is-Token-Expired", "true");
 
-                        authenticationContext.NoResult();
+            //            authenticationContext.NoResult();
 
-                        authenticationContext.Response.StatusCode = 500;
-                        authenticationContext.Response.ContentType = "text/plain";
+            //            authenticationContext.Response.StatusCode = 500;
+            //            authenticationContext.Response.ContentType = "text/plain";
 
-                        return authenticationContext.Response.WriteAsync(
-                            $"An error occurred processing your authentication. Details: {authenticationContext.Exception}");
-                    }
-                };
-            });
+            //            return authenticationContext.Response.WriteAsync(
+            //                $"An error occurred processing your authentication. Details: {authenticationContext.Exception}");
+            //        }
+            //    };
+            //});
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApi(builder.Configuration, "AzureAd");
 
             builder.Services.AddAuthorization(options =>
             {

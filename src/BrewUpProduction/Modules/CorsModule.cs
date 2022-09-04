@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.ResponseCompression;
-
-namespace BrewUpProduction.Modules
+﻿namespace BrewUpProduction.Modules
 {
     public sealed class CorsModule : IModule
     {
@@ -11,16 +9,16 @@ namespace BrewUpProduction.Modules
         {
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("CorsPolicy", corsBuilder =>
-                    corsBuilder.WithOrigins("https://localhost:7283/")
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials());
-
                 //options.AddPolicy("CorsPolicy", corsBuilder =>
-                //    corsBuilder.AllowAnyOrigin()
+                //    corsBuilder.WithOrigins("https://localhost:7283/")
                 //        .AllowAnyMethod()
-                //        .AllowAnyHeader());
+                //        .AllowAnyHeader()
+                //        .AllowCredentials());
+
+                options.AddPolicy("CorsPolicy", corsBuilder =>
+                    corsBuilder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
             });
 
             return builder.Services;
