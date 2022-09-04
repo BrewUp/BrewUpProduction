@@ -21,7 +21,7 @@ public class ProductionModule : IModule
     {
         endpoints.MapPost($"{BaseEndpointUrl}/beers/brew", ProductionEndpoints.HandleStartProduction)
             .WithTags("Production");
-        endpoints.MapPut("v1/production/beers/brew/{productionNumber}", ProductionEndpoints.HandleCompleteProduction)
+        endpoints.MapPut("v1/production/beers/brew/{batchNumber}", ProductionEndpoints.HandleCompleteProduction)
             .WithTags("Production");
 
         endpoints.MapGet($"{BaseEndpointUrl}/beers", ProductionEndpoints.HandleGetBeers)

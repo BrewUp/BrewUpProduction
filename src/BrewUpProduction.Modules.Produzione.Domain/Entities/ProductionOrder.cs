@@ -1,4 +1,5 @@
 ﻿using BrewUpProduction.Modules.Produzione.Shared.CustomTypes;
+using BrewUpProduction.Modules.Produzione.Shared.Enums;
 using Muflone.Core;
 
 namespace BrewUpProduction.Modules.Produzione.Domain.Entities;
@@ -12,6 +13,8 @@ public class ProductionOrder : Entity
 
     private ProductionStartTime _productionStartTime;
     private ProductionCompleteTime _productionCompleteTime;
+
+    internal OrderStatus OrderStatus { get; private set; } = OrderStatus.Open;
 
     protected ProductionOrder()
     {}
@@ -34,5 +37,7 @@ public class ProductionOrder : Entity
     {
         _quantityProduced = quantity;
         _productionCompleteTime = productionCompleteTime;
+
+        OrderStatus = OrderStatus.Completed;
     }
 }

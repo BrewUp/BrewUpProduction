@@ -1,6 +1,9 @@
 using BrewUpProduction.Modules.Produzione.Shared.CustomTypes;
+using BrewUpProduction.Modules.Produzione.Shared.Enums;
 using BrewUpProduction.Modules.Produzione.Shared.Events;
+using BrewUpProduction.ReadModel.Models;
 using Muflone.Core;
+using Muflone.Messages.Events;
 
 namespace BrewUpProduction.Modules.Produzione.Domain.Entities;
 
@@ -93,7 +96,11 @@ public class Beer : AggregateRoot
     internal void CompleteBeerProduction(BatchNumber batchNumber, Quantity quantity,
         ProductionCompleteTime productionCompleteTime)
     {
-        RaiseEvent(new BeerProductionCompleted(_beerId, batchNumber, quantity, productionCompleteTime));
+        var productionOrder = _productionOrders.FirstOrDefault(p => p.BatchNumber.Equals(batchNumber));
+        if (productionOrder == null || productionOrder.OrderStatus.Equals(OrderStatus.Completed))
+            RaiseEvent(new ProductionExceptionHappened(_beerId, $"Order {batchNumber.Value} already completed!"));
+        else
+            RaiseEvent(new BeerProductionCompleted(_beerId, batchNumber, quantity, productionCompleteTime));
     }
 
     private void Apply(BeerProductionCompleted @event)
