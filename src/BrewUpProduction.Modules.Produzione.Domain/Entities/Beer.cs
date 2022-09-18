@@ -1,9 +1,7 @@
 using BrewUpProduction.Modules.Produzione.Shared.CustomTypes;
 using BrewUpProduction.Modules.Produzione.Shared.Enums;
 using BrewUpProduction.Modules.Produzione.Shared.Events;
-using BrewUpProduction.ReadModel.Models;
 using Muflone.Core;
-using Muflone.Messages.Events;
 
 namespace BrewUpProduction.Modules.Produzione.Domain.Entities;
 

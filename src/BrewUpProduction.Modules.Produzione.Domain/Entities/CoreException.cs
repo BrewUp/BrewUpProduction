@@ -1,4 +1,5 @@
-﻿using BrewUpProduction.Modules.Produzione.Shared.Events;
+﻿using BrewUpProduction.Modules.Produzione.Shared.CustomTypes;
+using BrewUpProduction.Modules.Produzione.Shared.Events;
 using Muflone.Core;
 
 namespace BrewUpProduction.Modules.Produzione.Domain.Entities;
@@ -11,12 +12,12 @@ public class CoreException : AggregateRoot
     {
     }
 
-    internal static CoreException CreateAggregateException(DomainId aggregateId, Exception ex)
+    internal static CoreException CreateAggregateException(BeerId aggregateId, Exception ex)
     {
         return new CoreException(aggregateId, ex);
     }
 
-    private CoreException(DomainId aggregateId, Exception ex)
+    private CoreException(BeerId aggregateId, Exception ex)
     {
         RaiseEvent(new ProductionExceptionHappened(aggregateId,
             $"StackTrace: {ex.StackTrace} - Source: {ex.Source} - Message: {ex.Message}"));

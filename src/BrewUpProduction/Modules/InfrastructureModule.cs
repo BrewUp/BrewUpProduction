@@ -45,7 +45,9 @@ public class InfrastructureModule : IModule
             new BeerProductionCompletedConsumer(domainEventHandlerFactoryAsync!, azureBusConfiguration with { TopicName = nameof(BeerProductionCompleted) }, loggerFactory!),
 
             new AddBeerProductionConsumer(repository!, azureBusConfiguration with { TopicName = nameof(AddBeerProduction) }, loggerFactory!),
-            new BeerProductionAddedConsumer(domainEventHandlerFactoryAsync!, azureBusConfiguration with { TopicName = nameof(BeerProductionAdded) }, loggerFactory!)
+            new BeerProductionAddedConsumer(domainEventHandlerFactoryAsync!, azureBusConfiguration with { TopicName = nameof(BeerProductionAdded) }, loggerFactory!),
+
+            new ProductionExceptionHappenedConsumer(domainEventHandlerFactoryAsync!, azureBusConfiguration with { TopicName = nameof(ProductionExceptionHappened) }, loggerFactory!)
         };
         builder.Services.AddMufloneTransportAzure(
             new AzureServiceBusConfiguration(builder.Configuration["BrewUp:ServiceBusSettings:ConnectionString"], "",

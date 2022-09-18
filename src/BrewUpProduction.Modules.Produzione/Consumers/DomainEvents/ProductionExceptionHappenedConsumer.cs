@@ -8,15 +8,15 @@ using Muflone.Transport.Azure.Models;
 
 namespace BrewUpProduction.Modules.Produzione.Consumers.DomainEvents;
 
-public sealed class BeerProductionAddedConsumer : DomainEventConsumerBase<BeerProductionAdded>
+public sealed class ProductionExceptionHappenedConsumer : DomainEventConsumerBase<ProductionExceptionHappened>
 {
-    protected override IEnumerable<IDomainEventHandlerAsync<BeerProductionAdded>> HandlersAsync { get; }
+    protected override IEnumerable<IDomainEventHandlerAsync<ProductionExceptionHappened>> HandlersAsync { get; }
 
-    public BeerProductionAddedConsumer(IDomainEventHandlerFactoryAsync domainEventHandlerFactoryAsync,
+    public ProductionExceptionHappenedConsumer(IDomainEventHandlerFactoryAsync domainEventHandlerFactoryAsync,
         AzureServiceBusConfiguration azureServiceBusConfiguration,
         ILoggerFactory loggerFactory,
         ISerializer? messageSerializer = null) : base(azureServiceBusConfiguration, loggerFactory, messageSerializer)
     {
-        HandlersAsync = domainEventHandlerFactoryAsync.CreateDomainEventHandlersAsync<BeerProductionAdded>();
+        HandlersAsync = domainEventHandlerFactoryAsync.CreateDomainEventHandlersAsync<ProductionExceptionHappened>();
     }
 }
