@@ -29,7 +29,7 @@ public class BottlingBeerCommandTest : CommandSpecification<BottlingBeer>
     protected override IEnumerable<DomainEvent> Given()
     {
         yield return new BeerProductionStarted(_batchId, _batchNumber, _beerId, _beerType, _quantity, _productionStartTime);
-        yield return new BeerProductionCompleted(_batchId, _batchNumber, _finalQuantity, _productionCompleteTime);
+        yield return new BeerProductionCompleted(_batchId, _batchNumber, _beerId, _finalQuantity, _productionCompleteTime);
     }
 
     protected override BottlingBeer When() => new (_batchId, _bottleHalfLitre);

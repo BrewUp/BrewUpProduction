@@ -25,7 +25,7 @@ public class BottlingBeerCommandWithExceptionTest : CommandSpecification<Bottlin
     {
         yield return new BeerProductionStarted(_batchId, _batchNumber, _beerId, _beerType, _initialQuantity,
             new ProductionStartTime(DateTime.UtcNow));
-        yield return new BeerProductionCompleted(_batchId, _batchNumber, _initialQuantity,
+        yield return new BeerProductionCompleted(_batchId, _batchNumber, _beerId, _initialQuantity,
             new ProductionCompleteTime(DateTime.UtcNow));
         yield return new BeerBottled(_batchId, _bottleHalfLitre, _residualQuantity);
     }

@@ -23,7 +23,7 @@ public class CompleteBeerProductionWithErrorTest : CommandSpecification<Complete
     protected override IEnumerable<DomainEvent> Given()
     {
         yield return new BeerProductionStarted(_batchId, _batchNumber, _beerId, _beerType, _quantity, _productionStartTime);
-        yield return new BeerProductionCompleted(_batchId, _batchNumber, _quantity, _productionCompleteTime);
+        yield return new BeerProductionCompleted(_batchId, _batchNumber, _beerId, _quantity, _productionCompleteTime);
     }
 
     protected override CompleteBeerProduction When()

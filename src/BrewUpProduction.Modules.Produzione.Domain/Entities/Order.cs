@@ -62,7 +62,7 @@ public class Order : AggregateRoot
         if (_orderStatus.Equals(OrderStatus.Completed))
             RaiseEvent(new ProductionExceptionHappened(new BatchId(Id.Value), $"Order {_batchNumber.Value} already completed!"));
         else
-            RaiseEvent(new BeerProductionCompleted(new BatchId(Id.Value), _batchNumber, quantity, productionCompleteTime));
+            RaiseEvent(new BeerProductionCompleted(new BatchId(Id.Value), _batchNumber, _beerId, quantity, productionCompleteTime));
     }
 
     private void Apply(BeerProductionCompleted @event)

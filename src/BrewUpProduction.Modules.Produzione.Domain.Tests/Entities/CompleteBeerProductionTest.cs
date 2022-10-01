@@ -37,6 +37,6 @@ public class CompleteBeerProductionTest : CommandSpecification<CompleteBeerProdu
 
     protected override IEnumerable<DomainEvent> Expect()
     {
-        yield return new BeerProductionCompleted(_batchId, _batchNumber, _quantity, _productionCompleteTime);
+        yield return new BeerProductionCompleted(_batchId, _batchNumber, _beerId, _quantity, _productionCompleteTime);
     }
 }
