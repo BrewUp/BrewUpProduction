@@ -33,10 +33,6 @@ public static class ProductionHelper
 
         services
             .AddScoped<IDomainEventHandlerAsync<BeerProductionCompleted>, BeerProductionCompletedEventHandler>();
-        services
-            .AddScoped<IDomainEventHandlerAsync<BeerProductionCompleted>, BeerProductionCompletedForProductionOrderEventHandler>();
-
-        services.AddScoped<IDomainEventHandlerAsync<BeerProductionAdded>, BeerProductionAddedEventHandler>();
 
         services.AddScoped<IDomainEventHandlerAsync<ProductionExceptionHappened>, ProductionExceptionHappenedEventHandler>();
         #endregion

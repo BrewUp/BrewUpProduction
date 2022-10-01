@@ -21,9 +21,9 @@ public class ProductionServiceTests
         var messageSerilizer = new Serializer();
 
         var command = new StartBeerProduction(
-            new BeerId(Guid.NewGuid()),
             new BatchId(Guid.NewGuid()),
             new BatchNumber("1234"),
+            new BeerId(Guid.NewGuid()),
             new BeerType("IPA"),
             new Quantity(100),
             new ProductionStartTime(DateTime.UtcNow)

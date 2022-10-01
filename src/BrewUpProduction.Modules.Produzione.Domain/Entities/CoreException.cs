@@ -12,12 +12,12 @@ public class CoreException : AggregateRoot
     {
     }
 
-    internal static CoreException CreateAggregateException(BeerId aggregateId, Exception ex)
+    internal static CoreException CreateAggregateException(BatchId aggregateId, Exception ex)
     {
         return new CoreException(aggregateId, ex);
     }
 
-    private CoreException(BeerId aggregateId, Exception ex)
+    private CoreException(BatchId aggregateId, Exception ex)
     {
         RaiseEvent(new ProductionExceptionHappened(aggregateId,
             $"StackTrace: {ex.StackTrace} - Source: {ex.Source} - Message: {ex.Message}"));

@@ -1,7 +1,6 @@
 using BrewUpProduction.Modules.Produzione.Domain.Abstracts;
 using BrewUpProduction.Modules.Produzione.Domain.Entities;
 using BrewUpProduction.Modules.Produzione.Shared.Commands;
-using BrewUpProduction.Modules.Produzione.Shared.CustomTypes;
 using Microsoft.Extensions.Logging;
 using Muflone.Persistence;
 
@@ -17,23 +16,16 @@ public class StartBeerProductionCommandHandler : CommandHandlerAsync<StartBeerPr
     {
         if (cancellationToken.IsCancellationRequested)
             cancellationToken.ThrowIfCancellationRequested();
-
-        /* Mi arriva il comando
-         * Sono quindi alla porta di ingresso del domino
-         * - devo validarlo (posso rifiutarlo)
-         * - devo andare dall'aggregato Birra_i3d_Autunno e dirgli che è partita la produzione
-         * - 
-         */
         try
         {
-            var beer = Beer.StartBeerProduction(new BeerId(command.AggregateId.Value), command.BeerType,
-                command.BatchId, command.BatchNumber, command.Quantity, command.ProductionStartTime);
+            var order = Order.StartBeerProduction(command.BatchId, command.BatchNumber, command.BeerId,
+                command.BeerType, command.Quantity, command.ProductionStartTime);
 
-            await Repository.SaveAsync(beer, Guid.NewGuid());
+            await Repository.SaveAsync(order, Guid.NewGuid());
         }
         catch (Exception ex)
         {
-            CoreException.CreateAggregateException(new BeerId(command.AggregateId.Value), ex);
+            CoreException.CreateAggregateException(command.BatchId, ex);
         }
     }
 }

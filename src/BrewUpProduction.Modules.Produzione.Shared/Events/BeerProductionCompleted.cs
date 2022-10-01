@@ -5,21 +5,20 @@ namespace BrewUpProduction.Modules.Produzione.Shared.Events;
 
 public class BeerProductionCompleted : DomainEvent
 {
-    public readonly BeerId BeerId;
-
+    public readonly BatchId BatchId;
     public readonly BatchNumber BatchNumber;
 
     public readonly Quantity Quantity;
     public readonly ProductionCompleteTime ProductionCompleteTime;
 
-    public BeerProductionCompleted(BeerId aggregateId, BatchNumber batchNumber, Quantity quantity,
+    public BeerProductionCompleted(BatchId aggregateId, BatchNumber batchNumber, Quantity quantity,
         ProductionCompleteTime productionCompleteTime) : base(aggregateId)
     {
-        BeerId = aggregateId;
+        BatchId = aggregateId;
 
         BatchNumber = batchNumber;
 
-        Quantity = quantity;
         ProductionCompleteTime = productionCompleteTime;
+        Quantity = quantity;
     }
 }

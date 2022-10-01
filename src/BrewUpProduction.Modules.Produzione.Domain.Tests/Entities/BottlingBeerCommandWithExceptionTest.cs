@@ -10,9 +10,11 @@ namespace BrewUpProduction.Modules.Produzione.Domain.Tests.Entities;
 
 public class BottlingBeerCommandWithExceptionTest : CommandSpecification<BottlingBeer>
 {
-    private readonly BeerId _beerId = new(Guid.NewGuid());
-
+    private readonly BatchId _batchId = new(Guid.NewGuid());
     private readonly BatchNumber _batchNumber = new("1234");
+
+    private readonly BeerId _beerId = new(Guid.NewGuid());
+    private readonly BeerType _beerType = new ("Pilsner");
 
     private readonly Quantity _initialQuantity = new(30);
     private readonly Quantity _residualQuantity = new(5);
@@ -21,14 +23,16 @@ public class BottlingBeerCommandWithExceptionTest : CommandSpecification<Bottlin
 
     protected override IEnumerable<DomainEvent> Given()
     {
-        yield return new BeerProductionCompleted(_beerId, _batchNumber, _initialQuantity,
+        yield return new BeerProductionStarted(_batchId, _batchNumber, _beerId, _beerType, _initialQuantity,
+            new ProductionStartTime(DateTime.UtcNow));
+        yield return new BeerProductionCompleted(_batchId, _batchNumber, _initialQuantity,
             new ProductionCompleteTime(DateTime.UtcNow));
-        yield return new BeerBottled(_beerId, _bottleHalfLitre, _residualQuantity);
+        yield return new BeerBottled(_batchId, _bottleHalfLitre, _residualQuantity);
     }
 
     protected override BottlingBeer When()
     {
-        return new BottlingBeer(_beerId, _bottleHalfLitre);
+        return new BottlingBeer(_batchId, _bottleHalfLitre);
     }
 
     protected override ICommandHandlerAsync<BottlingBeer> OnHandler() =>
@@ -36,6 +40,6 @@ public class BottlingBeerCommandWithExceptionTest : CommandSpecification<Bottlin
 
     protected override IEnumerable<DomainEvent> Expect()
     {
-        yield return new ProductionExceptionHappened(_beerId, "Non hai abbastanza birra!!!!");
+        yield return new ProductionExceptionHappened(_batchId, "Non hai abbastanza birra!!!!");
     }
 }

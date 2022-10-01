@@ -28,17 +28,17 @@ public class BottlingBeerCommandTest : CommandSpecification<BottlingBeer>
 
     protected override IEnumerable<DomainEvent> Given()
     {
-        yield return new BeerProductionStarted(_beerId, _beerType, _batchId, _batchNumber, _quantity, _productionStartTime);
-        yield return new BeerProductionCompleted(_beerId, _batchNumber, _finalQuantity, _productionCompleteTime);
+        yield return new BeerProductionStarted(_batchId, _batchNumber, _beerId, _beerType, _quantity, _productionStartTime);
+        yield return new BeerProductionCompleted(_batchId, _batchNumber, _finalQuantity, _productionCompleteTime);
     }
 
-    protected override BottlingBeer When() => new (_beerId, _bottleHalfLitre);
+    protected override BottlingBeer When() => new (_batchId, _bottleHalfLitre);
 
     protected override ICommandHandlerAsync<BottlingBeer> OnHandler() =>
         new BottlingBeerCommandHandler(Repository, new NullLoggerFactory());
 
     protected override IEnumerable<DomainEvent> Expect()
     {
-        yield return new BeerBottledV2(_beerId, _bottleHalfLitre, _residualQuantity, _beerLabel);
+        yield return new BeerBottledV2(_batchId, _bottleHalfLitre, _residualQuantity, _beerLabel);
     }
 }

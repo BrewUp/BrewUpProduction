@@ -22,13 +22,13 @@ public class CompleteBeerProductionWithErrorTest : CommandSpecification<Complete
 
     protected override IEnumerable<DomainEvent> Given()
     {
-        yield return new BeerProductionStarted(_beerId, _beerType, _batchId, _batchNumber, _quantity, _productionStartTime);
-        yield return new BeerProductionCompleted(_beerId, _batchNumber, _quantity, _productionCompleteTime);
+        yield return new BeerProductionStarted(_batchId, _batchNumber, _beerId, _beerType, _quantity, _productionStartTime);
+        yield return new BeerProductionCompleted(_batchId, _batchNumber, _quantity, _productionCompleteTime);
     }
 
     protected override CompleteBeerProduction When()
     {
-        return new CompleteBeerProduction(_beerId, _batchNumber, _quantity, _productionCompleteTime);
+        return new CompleteBeerProduction(_batchId, _batchNumber, _quantity, _productionCompleteTime);
     }
 
     protected override ICommandHandlerAsync<CompleteBeerProduction> OnHandler()
@@ -38,6 +38,6 @@ public class CompleteBeerProductionWithErrorTest : CommandSpecification<Complete
 
     protected override IEnumerable<DomainEvent> Expect()
     {
-        yield return new ProductionExceptionHappened(_beerId, $"Order {_batchNumber.Value} already completed!");
+        yield return new ProductionExceptionHappened(_batchId, $"Order {_batchNumber.Value} already completed!");
     }
 }

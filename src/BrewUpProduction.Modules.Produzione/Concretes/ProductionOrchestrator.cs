@@ -3,7 +3,6 @@ using BrewUpProduction.Modules.Produzione.Shared.Commands;
 using BrewUpProduction.Modules.Produzione.Shared.CustomTypes;
 using BrewUpProduction.Modules.Produzione.Shared.Dtos;
 using BrewUpProduction.ReadModel.Abstracts;
-using BrewUpProduction.ReadModel.Models;
 using BrewUpProduction.Shared.Concretes;
 using Microsoft.Extensions.Logging;
 using Muflone.Persistence;
@@ -29,32 +28,16 @@ public sealed class ProductionOrchestrator : IProductionOrchestrator
     {
         try
         {
-            var beer = await _persister.GetByIdAsync<Beer>(postBrewBeer.BeerId.ToString());
+            var command = new StartBeerProduction(
+                new BatchId(Guid.NewGuid()),
+                new BatchNumber(postBrewBeer.BatchNumber),
+                new BeerId(postBrewBeer.BeerId),
+                new BeerType(postBrewBeer.BeerType),
+                new Quantity(postBrewBeer.Quantity),
+                new ProductionStartTime(DateTime.UtcNow)
+            );
 
-            if (string.IsNullOrWhiteSpace(beer.Id))
-            {
-                var command = new StartBeerProduction(
-                    new BeerId(postBrewBeer.BeerId),
-                    new BatchId(Guid.NewGuid()),
-                    new BatchNumber(postBrewBeer.BatchNumber),
-                    new BeerType(postBrewBeer.BeerType),
-                    new Quantity(postBrewBeer.Quantity),
-                    new ProductionStartTime(DateTime.UtcNow)
-                );
-
-                await _serviceBus.SendAsync(command);
-            }
-            else
-            {
-                var command = new AddBeerProduction(
-                    new BeerId(postBrewBeer.BeerId),
-                    new BatchId(Guid.NewGuid()),
-                    new BatchNumber(postBrewBeer.BatchNumber),
-                    new Quantity(postBrewBeer.Quantity),
-                    new ProductionStartTime(DateTime.UtcNow));
-
-                await _serviceBus.SendAsync(command);
-            }
+            await _serviceBus.SendAsync(command);
         }
         catch (Exception ex)
         {
@@ -67,7 +50,7 @@ public sealed class ProductionOrchestrator : IProductionOrchestrator
     {
         try
         {
-            var command = new CompleteBeerProduction(new BeerId(postBrewBeer.BeerId),
+            var command = new CompleteBeerProduction(new BatchId(postBrewBeer.BatchId),
                 new BatchNumber(postBrewBeer.BatchNumber),
                 new Quantity(postBrewBeer.Quantity),
                 new ProductionCompleteTime(postBrewBeer.ProductionTime));

@@ -7,7 +7,7 @@ public class ProductionExceptionHappened : DomainEvent
 {
     public readonly string Message;
 
-    public ProductionExceptionHappened(BeerId aggregateId, string message) : base(aggregateId)
+    public ProductionExceptionHappened(BatchId aggregateId, string message) : base(aggregateId)
     {
         Message = message;
     }
