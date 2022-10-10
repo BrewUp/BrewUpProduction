@@ -10,6 +10,7 @@ public class ProductionBeerValidator : AbstractValidator<PostProductionBeer>
         RuleFor(h => h.Quantity).GreaterThan(0);
         RuleFor(h => h.BeerId).NotEmpty();
         RuleFor(h => h.BeerType).NotEmpty();
+        RuleFor(h => h.BatchId).NotEqual(Guid.Empty);
         RuleFor(h => h.BatchNumber).NotEmpty();
         RuleFor(h => h.ProductionTime).GreaterThan(DateTime.MinValue);
     }
