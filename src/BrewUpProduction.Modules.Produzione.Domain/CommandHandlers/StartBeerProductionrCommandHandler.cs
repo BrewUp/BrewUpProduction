@@ -16,6 +16,7 @@ public class StartBeerProductionCommandHandler : CommandHandlerAsync<StartBeerPr
     {
         if (cancellationToken.IsCancellationRequested)
             cancellationToken.ThrowIfCancellationRequested();
+
         try
         {
             var order = Order.StartBeerProduction(command.BatchId, command.BatchNumber, command.BeerId,

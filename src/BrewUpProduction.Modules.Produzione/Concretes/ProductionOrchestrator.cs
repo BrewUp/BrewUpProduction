@@ -28,7 +28,7 @@ public sealed class ProductionOrchestrator : IProductionOrchestrator
     {
         try
         {
-            var command = new StartBeerProduction(
+            var command = new StartProductionSaga(
                 new BatchId(Guid.NewGuid()),
                 new BatchNumber(postBrewBeer.BatchNumber),
                 new BeerId(postBrewBeer.BeerId),

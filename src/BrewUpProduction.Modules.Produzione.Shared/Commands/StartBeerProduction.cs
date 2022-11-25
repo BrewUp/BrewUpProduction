@@ -8,16 +8,19 @@ public sealed class StartBeerProduction : Command
     public readonly BatchId BatchId;
     public readonly BatchNumber BatchNumber;
 
+    public readonly CorrelationId CorrelationId;
+
     public readonly BeerId BeerId;
     public readonly BeerType BeerType;
 
     public readonly Quantity Quantity;
     public readonly ProductionStartTime ProductionStartTime;
 
-    public StartBeerProduction(BatchId aggregateId, BatchNumber batchNumber, BeerId beerId, BeerType beerType,
-        Quantity quantity, ProductionStartTime productionStartTime) : base(aggregateId)
+    public StartBeerProduction(BatchId aggregateId, CorrelationId correlationId, BatchNumber batchNumber, BeerId beerId,
+	    BeerType beerType, Quantity quantity, ProductionStartTime productionStartTime) : base(aggregateId)
     {
         BatchId = aggregateId;
+        CorrelationId = correlationId;
         BatchNumber = batchNumber;
 
         BeerId = beerId;

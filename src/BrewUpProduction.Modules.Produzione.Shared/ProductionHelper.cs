@@ -1,5 +1,5 @@
 using BrewUpProduction.Modules.Produzione.Shared.Validators;
-using BrewUpProduction.Shared.Concretes;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,9 +9,8 @@ public static class ProductionHelper
 {
     public static IServiceCollection AddProduction(this IServiceCollection services)
     {
-        services.AddScoped<ValidationHandler>();
-        services.AddFluentValidation(options =>
-            options.RegisterValidatorsFromAssemblyContaining<ProductionBeerValidator>());
+	    services.AddFluentValidationAutoValidation();
+	    services.AddValidatorsFromAssemblyContaining<ProductionBeerValidator>();
 
         return services;
     }

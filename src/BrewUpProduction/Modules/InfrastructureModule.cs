@@ -1,6 +1,7 @@
 ﻿using BrewUpProduction.Modules.Produzione;
 using BrewUpProduction.Modules.Produzione.Consumers.DomainEvents;
 using BrewUpProduction.Modules.Produzione.Domain.Consumers;
+using BrewUpProduction.Modules.Produzione.Domain.Sagas;
 using BrewUpProduction.Modules.Produzione.Shared.Commands;
 using BrewUpProduction.Modules.Produzione.Shared.Events;
 using BrewUpProduction.ReadModel.MongoDb;
@@ -8,6 +9,7 @@ using BrewUpProduction.Shared;
 using BrewUpProduction.Shared.Configuration;
 using Muflone.Factories;
 using Muflone.Persistence;
+using Muflone.Saga.Persistence;
 using Muflone.Transport.Azure;
 using Muflone.Transport.Azure.Abstracts;
 using Muflone.Transport.Azure.Models;
@@ -24,12 +26,15 @@ public class InfrastructureModule : IModule
         builder.Services.AddProductionModule();
 
         builder.Services.AddEventStore(builder.Configuration.GetSection("BrewUp:EventStoreSettings").Get<EventStoreSettings>());
+        builder.Services.AddScoped<ISagaRepository, InMemorySagaRepository>();
 
-        var serviceProvider = builder.Services.BuildServiceProvider();
-        var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+		var serviceProvider = builder.Services.BuildServiceProvider();
+        var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
 
-        var domainEventHandlerFactoryAsync = serviceProvider.GetService<IDomainEventHandlerFactoryAsync>();
-        var repository = serviceProvider.GetService<IRepository>();
+        var domainEventHandlerFactoryAsync = serviceProvider.GetRequiredService<IDomainEventHandlerFactoryAsync>();
+        var repository = serviceProvider.GetRequiredService<IRepository>();
+        var sagaRepository = serviceProvider.GetRequiredService<ISagaRepository>();
+        var serviceBus = serviceProvider.GetRequiredService<IServiceBus>();
 
         var clientId = builder.Configuration["BrewUp:ClientId"];
         var serviceBusConnectionString = builder.Configuration["BrewUp:ServiceBusSettings:ConnectionString"];
@@ -38,13 +43,15 @@ public class InfrastructureModule : IModule
 
         var consumers = new List<IConsumer>
         {
-            new StartBeerProductionConsumer(repository!,azureBusConfiguration with { TopicName = nameof(StartBeerProduction) }, loggerFactory!),
-            new BeerProductionStartedConsumer(domainEventHandlerFactoryAsync!, azureBusConfiguration with { TopicName = nameof(BeerProductionStarted) }, loggerFactory!),
+            new StartProductionSagaConsumer(sagaRepository, serviceBus, azureBusConfiguration with { TopicName = nameof(StartProductionSaga) }, loggerFactory),
 
-            new CompleteBeerProductionConsumer(repository!, azureBusConfiguration with { TopicName = nameof(CompleteBeerProduction) }, loggerFactory!),
-            new BeerProductionCompletedConsumer(domainEventHandlerFactoryAsync!, azureBusConfiguration with { TopicName = nameof(BeerProductionCompleted) }, loggerFactory!),
+            new StartBeerProductionConsumer(repository, azureBusConfiguration with { TopicName = nameof(StartBeerProduction) }, loggerFactory),
+            new BeerProductionStartedConsumer(domainEventHandlerFactoryAsync, azureBusConfiguration with { TopicName = nameof(BeerProductionStarted) }, loggerFactory),
 
-            new ProductionExceptionHappenedConsumer(domainEventHandlerFactoryAsync!, azureBusConfiguration with { TopicName = nameof(ProductionExceptionHappened) }, loggerFactory!)
+            new CompleteBeerProductionConsumer(repository, azureBusConfiguration with { TopicName = nameof(CompleteBeerProduction) }, loggerFactory),
+            new BeerProductionCompletedConsumer(domainEventHandlerFactoryAsync, azureBusConfiguration with { TopicName = nameof(BeerProductionCompleted) }, loggerFactory),
+
+            new ProductionExceptionHappenedConsumer(domainEventHandlerFactoryAsync, azureBusConfiguration with { TopicName = nameof(ProductionExceptionHappened) }, loggerFactory)
         };
         builder.Services.AddMufloneTransportAzure(
             new AzureServiceBusConfiguration(builder.Configuration["BrewUp:ServiceBusSettings:ConnectionString"], "",

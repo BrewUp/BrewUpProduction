@@ -1,7 +1,6 @@
 ﻿using BrewUpProduction.Modules.Produzione.Shared.CustomTypes;
 using BrewUpProduction.Modules.Produzione.Shared.Enums;
 using BrewUpProduction.Modules.Produzione.Shared.Events;
-using BrewUpProduction.ReadModel.Models;
 using Muflone.Core;
 
 namespace BrewUpProduction.Modules.Produzione.Domain.Entities;
@@ -35,6 +34,7 @@ public class Order : AggregateRoot
     private Order(BatchId batchId, BatchNumber batchNumber, BeerId beerId, BeerType beerType, Quantity quantity,
         ProductionStartTime productionStartTime)
     {
+        // Check policy
         RaiseEvent(new BeerProductionStarted(batchId, batchNumber, beerId, beerType, quantity, productionStartTime));
     }
 

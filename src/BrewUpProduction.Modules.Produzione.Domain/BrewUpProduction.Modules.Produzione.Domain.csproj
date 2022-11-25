@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
@@ -11,8 +11,9 @@
     </ItemGroup>
     
     <ItemGroup>
-        <PackageReference Include="Muflone" Version="6.1.0" />
+        <PackageReference Include="Muflone" Version="6.1.1" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
+        <PackageReference Include="Muflone.Saga" Version="6.1.0" />
         <PackageReference Include="Muflone.Transport.Azure" Version="6.1.1" />
     </ItemGroup>
     

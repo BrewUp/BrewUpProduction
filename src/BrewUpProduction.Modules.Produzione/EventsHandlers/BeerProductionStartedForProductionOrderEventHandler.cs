@@ -1,7 +1,6 @@
 ﻿using BrewUpProduction.Modules.Produzione.Abstracts;
 using BrewUpProduction.Modules.Produzione.Hubs;
 using BrewUpProduction.Modules.Produzione.Shared.Events;
-using LanguageExt;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
