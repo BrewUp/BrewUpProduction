@@ -21,13 +21,13 @@ public class ProductionModule : IModule
     {
         endpoints.MapPost($"{BaseEndpointUrl}/beers/brew", ProductionEndpoints.HandleStartProduction)
             .WithTags("Production");
-        endpoints.MapPut("v1/production/beers/brew/{batchNumber}", ProductionEndpoints.HandleCompleteProduction)
-            .WithTags("Production");
+        //endpoints.MapPut("v1/production/beers/brew/{batchNumber}", ProductionEndpoints.HandleCompleteProduction)
+        //    .WithTags("Production");
 
-        endpoints.MapGet($"{BaseEndpointUrl}/beers", ProductionEndpoints.HandleGetBeers)
-            .WithTags("Production");
-        endpoints.MapGet($"{BaseEndpointUrl}", ProductionEndpoints.HandleGetProductionOrders)
-            .WithTags("Production");
+        //endpoints.MapGet($"{BaseEndpointUrl}/beers", ProductionEndpoints.HandleGetBeers)
+        //    .WithTags("Production");
+        //endpoints.MapGet($"{BaseEndpointUrl}", ProductionEndpoints.HandleGetProductionOrders)
+        //    .WithTags("Production");
 
         return endpoints;
     }

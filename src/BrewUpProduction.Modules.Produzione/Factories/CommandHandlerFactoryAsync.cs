@@ -14,5 +14,5 @@ public sealed class CommandHandlerFactoryAsync : ICommandHandlerFactoryAsync
     }
 
     public ICommandHandlerAsync<T> CreateCommandHandlerAsync<T>() where T : class, ICommand =>
-        _serviceProvider.GetService<ICommandHandlerAsync<T>>()!;
+        _serviceProvider.GetRequiredService<ICommandHandlerAsync<T>>();
 }

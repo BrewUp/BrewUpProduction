@@ -3,7 +3,7 @@ using Muflone.Messages.Events;
 
 namespace BrewUpProduction.Modules.Produzione.Shared.Events;
 
-public sealed class StoreAvailability : DomainEvent
+public sealed class StoreAvailabilityVerified : DomainEvent
 {
 	public readonly BatchId BatchId;
 	public readonly CorrelationId CorrelationId;
@@ -13,7 +13,7 @@ public sealed class StoreAvailability : DomainEvent
 	public readonly Quantity QuantityToProduce;
 	public readonly Quantity QuantityAvailable;
 
-	public StoreAvailability(BatchId aggregateId, Guid correlationId, BeerId beerId, Quantity quantityToProduce,
+	public StoreAvailabilityVerified(BatchId aggregateId, Guid correlationId, BeerId beerId, Quantity quantityToProduce,
 		Quantity quantityAvailable) : base(aggregateId, correlationId)
 	{
 		BatchId = aggregateId;

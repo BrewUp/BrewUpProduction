@@ -100,6 +100,16 @@ public class Order : AggregateRoot
     }
     #endregion
 
+    internal void PrepareSaga(BatchId batchId, CorrelationId correlationId, BeerId beerId, Quantity quantity)
+    {
+        RaiseEvent(new SagaReady(batchId, correlationId, beerId, quantity));
+    }
+
+    private void Apply(SagaReady @event)
+    {
+
+    }
+
     #region Exceptions
     private void Apply(ProductionExceptionHappened @eventExceptionHappened)
     { }

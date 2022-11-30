@@ -2,12 +2,12 @@
 using Muflone.Persistence;
 using Muflone.Saga.Persistence;
 
-namespace BrewUpProduction.Modules.Produzione.Domain.Sagas;
+namespace BrewUpProduction.Modules.Produzione.Sagas;
 
 public class InMemorySagaRepository : ISagaRepository, IDisposable
 {
 	private readonly ISerializer _serializer;
-	internal static readonly ConcurrentDictionary<Guid, string> Data = new ConcurrentDictionary<Guid, string>();
+	internal static readonly ConcurrentDictionary<Guid, string> Data = new();
 
 	public InMemorySagaRepository(ISerializer serializer)
 	{

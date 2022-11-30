@@ -12,31 +12,32 @@ namespace BrewUpProduction.Modules.Produzione;
 
 public static class ProductionHelper
 {
-    public static IServiceCollection AddProductionModule(this IServiceCollection services)
-    {
-        services.AddScoped<IProductionOrchestrator, ProductionOrchestrator>();
-        services.AddSingleton<IProductionBroadcastService, ProductionBroadcastService>();
+	public static IServiceCollection AddProductionModule(this IServiceCollection services)
+	{
+		services.AddScoped<IProductionOrchestrator, ProductionOrchestrator>();
+		services.AddSingleton<IProductionBroadcastService, ProductionBroadcastService>();
 
-        services.AddScoped<IProductionService, ProductionService>();
-        services.AddScoped<IBeerService, BeerService>();
+		services.AddScoped<IProductionService, ProductionService>();
+		services.AddScoped<IBeerService, BeerService>();
 
-        services.AddSingleton<ProductionHub>();
+		services.AddSingleton<ProductionHub>();
 
-        #region DomainEventHandler
-        services.AddScoped<IDomainEventHandlerFactoryAsync, DomainEventHandlerFactoryAsync>();
-        services.AddScoped<ICommandHandlerFactoryAsync, CommandHandlerFactoryAsync>();
+		#region DomainEventHandler
+		services.AddScoped<IDomainEventHandlerFactoryAsync, DomainEventHandlerFactoryAsync>();
+		services.AddScoped<ICommandHandlerFactoryAsync, CommandHandlerFactoryAsync>();
+		services.AddScoped<ServiceBusFactory>();
 
-        services
-            .AddScoped<IDomainEventHandlerAsync<BeerProductionStarted>, BeerProductionStartedEventHandler>();
-        services
-            .AddScoped<IDomainEventHandlerAsync<BeerProductionStarted>, BeerProductionStartedForProductionOrderEventHandler>();
+		services
+			.AddScoped<IDomainEventHandlerAsync<BeerProductionStarted>, BeerProductionStartedEventHandler>();
+		services
+			.AddScoped<IDomainEventHandlerAsync<BeerProductionStarted>, BeerProductionStartedForProductionOrderEventHandler>();
 
-        services
-            .AddScoped<IDomainEventHandlerAsync<BeerProductionCompleted>, BeerProductionCompletedEventHandler>();
+		services
+			.AddScoped<IDomainEventHandlerAsync<BeerProductionCompleted>, BeerProductionCompletedEventHandler>();
 
-        services.AddScoped<IDomainEventHandlerAsync<ProductionExceptionHappened>, ProductionExceptionHappenedEventHandler>();
-        #endregion
+		services.AddScoped<IDomainEventHandlerAsync<ProductionExceptionHappened>, ProductionExceptionHappenedEventHandler>();
+		#endregion
 
-        return services;
-    }
+		return services;
+	}
 }

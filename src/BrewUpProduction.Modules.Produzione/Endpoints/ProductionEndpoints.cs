@@ -10,16 +10,14 @@ namespace BrewUpProduction.Modules.Produzione.Endpoints;
 public static class ProductionEndpoints
 {
     public static async Task<IResult> HandleStartProduction(
-        IProductionOrchestrator productionService,
-        IValidator<PostProductionBeer> validator,
-        ValidationHandler validationHandler,
+        IProductionOrchestrator productionOrchestrator,
         PostProductionBeer body)
     {
-        await validationHandler.ValidateAsync(validator, body);
-        if (!validationHandler.IsValid)
-            return Results.BadRequest(validationHandler.Errors);
+        //await validationHandler.ValidateAsync(validator, body);
+        //if (!validationHandler.IsValid)
+        //    return Results.BadRequest(validationHandler.Errors);
 
-        await productionService.StartProductionAsync(body);
+        await productionOrchestrator.StartProductionAsync(body);
 
         return Results.Accepted();
     }

@@ -1,8 +1,8 @@
 ﻿using BrewUpProduction.Modules.Produzione.Abstracts;
+using BrewUpProduction.Modules.Produzione.Sagas;
 using BrewUpProduction.Modules.Produzione.Shared.Commands;
 using BrewUpProduction.Modules.Produzione.Shared.CustomTypes;
 using BrewUpProduction.Modules.Produzione.Shared.Dtos;
-using BrewUpProduction.ReadModel.Abstracts;
 using BrewUpProduction.Shared.Concretes;
 using Microsoft.Extensions.Logging;
 using Muflone.Persistence;
@@ -12,15 +12,14 @@ namespace BrewUpProduction.Modules.Produzione.Concretes;
 public sealed class ProductionOrchestrator : IProductionOrchestrator
 {
     private readonly IServiceBus _serviceBus;
-    private readonly IPersister _persister;
     private readonly ILogger _logger;
+    private readonly ProductionSaga _productionSaga;
 
     public ProductionOrchestrator(IServiceBus serviceBus,
-        IPersister persister,
-        ILoggerFactory loggerFactory)
+        ILoggerFactory loggerFactory, ProductionSaga productionSaga)
     {
         _serviceBus = serviceBus;
-        _persister = persister;
+        _productionSaga = productionSaga;
         _logger = loggerFactory.CreateLogger(GetType());
     }
 
@@ -28,16 +27,15 @@ public sealed class ProductionOrchestrator : IProductionOrchestrator
     {
         try
         {
-            var command = new StartProductionSaga(
+            var command = new AskAvailabilityToStore(
                 new BatchId(Guid.NewGuid()),
-                new BatchNumber(postBrewBeer.BatchNumber),
+                new CorrelationId(Guid.NewGuid()),
                 new BeerId(postBrewBeer.BeerId),
                 new BeerType(postBrewBeer.BeerType),
-                new Quantity(postBrewBeer.Quantity),
-                new ProductionStartTime(DateTime.UtcNow)
+                new Quantity(postBrewBeer.Quantity)
             );
 
-            await _serviceBus.SendAsync(command);
+            await _productionSaga.StartedBy(command);
         }
         catch (Exception ex)
         {

@@ -15,7 +15,7 @@ public sealed class DomainEventHandlerFactoryAsync : IDomainEventHandlerFactoryA
 
     public IDomainEventHandlerAsync<T> CreateDomainEventHandlerAsync<T>() where T : class, IDomainEvent
     {
-        return _serviceProvider.GetService<IDomainEventHandlerAsync<T>>()!;
+        return _serviceProvider.GetRequiredService<IDomainEventHandlerAsync<T>>();
     }
 
     public IEnumerable<IDomainEventHandlerAsync<T>> CreateDomainEventHandlersAsync<T>() where T : class, IDomainEvent
